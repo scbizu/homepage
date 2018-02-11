@@ -14,12 +14,12 @@ type Homepage struct {
 func (hp *Homepage) Render() vecty.ComponentOrHTML {
 	return elem.Body(
 		elem.Paragraph(
-			vecty.Text("Hello scnace"),
+			vecty.Text("this site will stay in maintance in a long-long time,you can find me via telegram @scnace"),
 		),
 	)
 }
 
 func main() {
-	vecty.SetTitle("Welcome,Here is nace :-)")
+	vecty.SetTitle("scnace|一只菜鸡的成长之路")
 	vecty.RenderBody(&Homepage{})
 }
