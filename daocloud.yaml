@@ -1,0 +1,31 @@
+version: 3.0
+
+stages:
+   - test
+   - build
+
+test:
+   stage: test
+   job_type: test
+   label: develop
+   image: ubuntu
+   script:
+      - echo This is a default test.
+   only:
+      branches:
+      - master
+      tags:
+      - .*
+
+build:
+   stage: build
+   job_type: image_build
+   label: release-image
+   build_dir: /
+   dockerfile_path: /Dockerfile
+   cache: true
+   only:
+      branches:
+      - master
+      tags:
+      - .*
