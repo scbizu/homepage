@@ -14,4 +14,4 @@ gopherjs build .
 
 ENTRYPOINT homepage -s $GOPATH/src/github.com/scbizu/homepage/static/
 
-EXPOSE 8000
+EXPOSE 8090
