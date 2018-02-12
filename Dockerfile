@@ -12,6 +12,6 @@ go install && \
 cd static && \
 gopherjs build .
 
-ENTRYPOINT homepage
+ENTRYPOINT homepage -s $GOPATH/src/github.com/scbizu/homepage/static/
 
 EXPOSE 8000
