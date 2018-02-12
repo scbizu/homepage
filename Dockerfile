@@ -12,7 +12,6 @@ go install && \
 cd static && \
 gopherjs build .
 
-
-ENTRYPOINT $GOPATH/bin/homepage
+ENTRYPOINT homepage
 
 EXPOSE 8000

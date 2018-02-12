@@ -36,8 +36,8 @@ var RootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Printf("Homepage service starts at:%s", time.Now().String())
-		http.Handle("/", http.FileServer(http.Dir(staticFilePath)))
-		http.ListenAndServe(":8000", nil)
+		log.Printf("staticFile detached at:%s", staticFilePath)
+		http.ListenAndServe(":8000", http.FileServer(http.Dir(staticFilePath)))
 	},
 }
 
