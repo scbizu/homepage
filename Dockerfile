@@ -4,7 +4,7 @@ MAINTAINER scnace "scbizu@gmail.com"
 
 ADD . $GOPATH/src/github.com/scbizu/homepage
 
-COPY ./static/index.html $GOPATH/src/github.com/scbizu/homepage/static/index.html
+COPY ./static/ $GOPATH/src/github.com/scbizu/homepage/static/
 
 RUN go get -u github.com/gopherjs/gopherjs && \
 cd $GOPATH/src/github.com/scbizu/homepage && \

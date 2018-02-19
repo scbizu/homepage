@@ -1,0 +1,36 @@
+body{
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#scnace-footer{
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#scnace-body{
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  text-align: center;
+}
+
+#scnace-about{
+  display: flex;
+  justify-content: center;
+}
+
+#home{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  height: 100vh;
+}
+
+.link{
+  margin: 0 20px;
+  cursor: pointer;
+  text-decoration: underline;
+}

@@ -1,4 +1,4 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2018 NAME HERE scbizu@gmail.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ var RootCmd = &cobra.Command{
 	* homepage will use GopherJS as the front-end
 	* homepage is the index of scnace
 	`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Printf("Homepage service starts at:%s", time.Now().String())
 		http.ListenAndServe(":8090", http.FileServer(http.Dir(staticFilePath)))
