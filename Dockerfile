@@ -1,4 +1,4 @@
-FROM  daocloud.io/library/golang:1.9.0
+FROM  golang:1.10
 
 MAINTAINER scnace "scbizu@gmail.com"
 
