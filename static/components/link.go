@@ -31,13 +31,13 @@ func (a *About) Render() vecty.ComponentOrHTML {
 			),
 			vecty.Text("Blog"),
 		),
-		//Telegram
+		//Telegram Channel
 		elem.Anchor(
 			vecty.Markup(
-				prop.Href("https://t.me/scnace"),
+				prop.Href("https://t.me/aboutNace"),
 				vecty.Class("link"),
 			),
-			vecty.Text("Telegram"),
+			vecty.Text("Telegram Channel"),
 		),
 		//Twitter
 		elem.Anchor(
