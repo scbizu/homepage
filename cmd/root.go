@@ -15,9 +15,9 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"net/http"
-	"time"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -33,8 +33,8 @@ var RootCmd = &cobra.Command{
 	* homepage is the index of scnace
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Printf("Homepage service starts at:%s", time.Now().String())
-		http.ListenAndServe(":8090", http.FileServer(http.Dir(staticFilePath)))
+		port := os.Getenv("PORT")
+		http.ListenAndServe(fmt.Sprintf(":%s", port), http.FileServer(http.Dir(staticFilePath)))
 	},
 }
 
