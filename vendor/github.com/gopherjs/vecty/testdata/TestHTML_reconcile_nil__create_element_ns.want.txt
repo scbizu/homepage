@@ -1,5 +1,0 @@
-global.Get("document")
-global.Get("document").Call("createElementNS", "foobar", "strong")
-global.Get("document").Call("createElementNS", "foobar", "strong").Get("classList")
-global.Get("document").Call("createElementNS", "foobar", "strong").Get("dataset")
-global.Get("document").Call("createElementNS", "foobar", "strong").Get("style")

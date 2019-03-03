@@ -1,2 +1,0 @@
-global.Get("document")
-global.Get("document").Set("title", "foobartitle")
