@@ -13,7 +13,8 @@
   },
   "stages":{
     "production":{
-      "domain": "scnace.me"
+      "domain":"scnace.me",
+      "zone": false
     }
   },
   "regions": [
