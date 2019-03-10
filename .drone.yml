@@ -1,0 +1,37 @@
+kind: pipeline
+name: homepage
+
+workspace:
+  base: /go
+  path: src/github.com/scbizu/homepage
+
+steps:
+- name: build
+  image: golang:1.11
+  environment:
+  - GO111MODULE=on
+  commands:
+  - go install
+- name: up_dev
+  image: appleboy/drone-apex-up
+  pull: true
+  environment:
+    aws_secret_access_key:
+      from_serect: aws_secret_access_key
+    aws_access_key_id:
+      from_secret: aws_access_key_id
+  stage: staging
+  when:
+    event: push
+- name: up_prod
+  image: appleboy/drone-apex-up
+  pull: true
+  environment:
+    aws_secret_access_key:
+      from_serect: aws_secret_access_key
+    aws_access_key_id:
+      from_secret: aws_access_key_id
+  stage: production
+  when:
+    event: push
+    branch: master
