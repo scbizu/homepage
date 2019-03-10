@@ -9,7 +9,7 @@ steps:
 - name: build
   image: golang:1.11
   environment:
-  - GO111MODULE=on
+    GO111MODULE: on
   commands:
   - go install
 - name: up_dev
