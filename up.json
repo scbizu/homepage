@@ -2,6 +2,10 @@
   "name": "homepage",
   "profile": "scnace_aws",
   "hooks": {
+    "build": [
+      "export GO111MODULE=on",
+      "GOOS=linux GOARCH=amd64 go build -o server *.go"
+    ],
     "clean":"rm server"
   },
   "proxy":{
