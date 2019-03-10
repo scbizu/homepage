@@ -8,11 +8,10 @@ workspace:
 steps:
 - name: build
   image: golang:1.11
-  privileged: true
   environment:
     GO111MODULE: on
   commands:
-  - go install
+  - GOOS=linux GOARCH=amd64 go build -o server *.go
 - name: up_dev
   image: appleboy/drone-apex-up
   pull: true
@@ -21,7 +20,6 @@ steps:
       from_serect: aws_secret_access_key
     aws_access_key_id:
       from_secret: aws_access_key_id
-  directory: /go
   stage: staging
   when:
     event: push
@@ -33,8 +31,8 @@ steps:
       from_serect: aws_secret_access_key
     aws_access_key_id:
       from_secret: aws_access_key_id
-  directory: /go
   stage: production
   when:
     event: push
     branch: master
+
