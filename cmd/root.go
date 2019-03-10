@@ -34,7 +34,9 @@ var RootCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		port := os.Getenv("PORT")
-		http.ListenAndServe(fmt.Sprintf(":%s", port), http.FileServer(http.Dir(staticFilePath)))
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", port), http.FileServer(http.Dir(staticFilePath))); err != nil {
+			panic(err)
+		}
 	},
 }
 
