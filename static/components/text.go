@@ -1,11 +1,11 @@
 package components
 
 import (
-	"github.com/gopherjs/vecty"
-	"github.com/gopherjs/vecty/elem"
+	"github.com/hexops/vecty"
+	"github.com/hexops/vecty/elem"
 )
 
-// Text defines the text structrue
+// Text defines the text structure
 type Text struct {
 	vecty.Core
 }

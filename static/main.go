@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/gopherjs/vecty"
-	"github.com/gopherjs/vecty/elem"
-	"github.com/gopherjs/vecty/prop"
+	"github.com/hexops/vecty"
+	"github.com/hexops/vecty/elem"
+	"github.com/hexops/vecty/prop"
 	"github.com/scbizu/homepage/static/components"
 )
 
@@ -23,5 +23,6 @@ func (hp *Homepage) Render() vecty.ComponentOrHTML {
 
 func main() {
 	vecty.SetTitle("scnace|一只菜鸡的成长之路")
+	vecty.AddStylesheet("main.css")
 	vecty.RenderBody(&Homepage{})
 }

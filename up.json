@@ -3,13 +3,11 @@
   "profile": "scnace_aws",
   "hooks": {
     "build": [
-      "export GO111MODULE=on",
-      "GOOS=linux GOARCH=amd64 go build -o server *.go"
-    ],
-    "clean":"rm server"
+      "GOOS=linux GOARCH=amd64 go build -o wasmserver server/main.go"
+    ]
   },
   "proxy":{
-    "command":"./server -s ./static/"
+    "command":"GO111MODULE=on ./wasmserver -workdir ./static github.com/scbizu/homepage/static "
   },
   "stages":{
     "production":{
