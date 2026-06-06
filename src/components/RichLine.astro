@@ -23,6 +23,17 @@ const normalizedTokens = typeof tokens === "string" ? parseInlineMarkup(tokens) 
       classes.push("marker-highlight");
     }
 
-    return <span class={classes.join(" ")}>{token.text}</span>;
+    return token.href ? (
+      <a
+        href={token.href}
+        class:list={[...classes, "inline-cta-link"]}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {token.text}
+      </a>
+    ) : (
+      <span class={classes.join(" ")}>{token.text}</span>
+    );
   })
 }

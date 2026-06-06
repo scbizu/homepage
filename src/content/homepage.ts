@@ -5,6 +5,7 @@ export type AnnotationMode = "inline" | "margin";
 export interface InlineToken {
   text: string;
   mark?: InlineMark;
+  href?: string;
 }
 
 export interface AnnotatedSegment {
@@ -135,8 +136,8 @@ export const homepage: HomepageContent = {
       "🙌 欢迎光临 Nace 的情感树洞，这里保留了一些我",
       "<highlight>日常的生活记录</highlight>",
       "和对 ",
-      "<highlight>这个世界的思考</highlight>。作为某朋友圈的替代，我希望能自己构建一个让我自己更舒服的表达空间。如果你能找到这里",
-      "，不要随便传播呦 🫶",
+      "<highlight>这个世界的思考</highlight>。作为某朋友圈的替代，我希望能自己构建一个让我自己更舒服的表达空间。",
+      "这里更多的是琐碎的日常，一些完整的文章可以移步[我的技术博客](https://blog.scnace.me) 🫶",
     ],
     avatar: {
       src: "/images/avatar-stamp.svg",

@@ -1,26 +1,30 @@
 import type { InlineMark, InlineToken } from "../content/homepage";
 
 const supportedMarks = new Set<InlineMark>(["highlight", "circle"]);
-const tagPattern = /<(highlight|circle)>(.*?)<\/\1>/gs;
+const tokenPattern = /<(highlight|circle)>(.*?)<\/\1>|\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/gs;
 
 export function parseInlineMarkup(input: string): InlineToken[] {
   const tokens: InlineToken[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
-  while ((match = tagPattern.exec(input)) !== null) {
-    const [fullMatch, rawMark, markedText] = match;
+  while ((match = tokenPattern.exec(input)) !== null) {
+    const [fullMatch, rawMark, markedText, linkLabel, linkHref] = match;
     const matchIndex = match.index;
 
     if (matchIndex > lastIndex) {
       tokens.push({ text: input.slice(lastIndex, matchIndex), mark: "plain" });
     }
 
-    const mark = rawMark as InlineMark;
-    if (supportedMarks.has(mark)) {
-      tokens.push({ text: markedText, mark });
+    if (linkLabel && linkHref) {
+      tokens.push({ text: linkLabel, mark: "plain", href: linkHref });
     } else {
-      tokens.push({ text: fullMatch, mark: "plain" });
+      const mark = rawMark as InlineMark;
+      if (supportedMarks.has(mark)) {
+        tokens.push({ text: markedText, mark });
+      } else {
+        tokens.push({ text: fullMatch, mark: "plain" });
+      }
     }
 
     lastIndex = matchIndex + fullMatch.length;

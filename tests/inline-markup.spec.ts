@@ -25,6 +25,14 @@ describe("inline markup parser", () => {
       { text: "hello<unknown>world</unknown>", mark: "plain" },
     ]);
   });
+
+  test("converts markdown links into link tokens", async () => {
+    const mod = await import(parserPath);
+    expect(mod.parseInlineMarkup("移步[我的技术博客](https://blog.scnace.me)")).toEqual([
+      { text: "移步", mark: "plain" },
+      { text: "我的技术博客", mark: "plain", href: "https://blog.scnace.me" },
+    ]);
+  });
 });
 
 describe("profile intro rendering", () => {

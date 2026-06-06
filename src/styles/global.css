@@ -148,6 +148,22 @@ a {
   background-image: linear-gradient(transparent 48%, rgba(255, 217, 92, 0.72) 48%);
 }
 
+.inline-cta-link {
+  display: inline-block;
+  font-size: 0.92em;
+  color: var(--ink);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgba(178, 75, 76, 0.9);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.24em;
+}
+
+.inline-cta-link:hover,
+.inline-cta-link:focus-visible {
+  color: rgba(21, 34, 75, 0.84);
+}
+
 .annotated-line {
   display: inline;
 }
