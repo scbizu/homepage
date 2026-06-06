@@ -1,0 +1,21 @@
+---
+import RichLine from "./RichLine.astro";
+import type { QuoteFeedEntry } from "../content/homepage";
+
+interface Props {
+  entry: QuoteFeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="space-y-4">
+  <blockquote class="quote-block text-[1.9rem] leading-[1.7]">
+    {entry.quote.map((line) => (
+      <p class="m-0">
+        “<RichLine tokens={line} />”
+      </p>
+    ))}
+  </blockquote>
+  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+</article>

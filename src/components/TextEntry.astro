@@ -1,0 +1,21 @@
+---
+import AnnotatedLine from "./AnnotatedLine.astro";
+import type { TextFeedEntry } from "../content/homepage";
+
+interface Props {
+  entry: TextFeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="space-y-6">
+  <div class="entry-copy">
+    {entry.lines.map((line) => (
+      <p class="m-0">
+        <AnnotatedLine line={line} />
+      </p>
+    ))}
+  </div>
+  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+</article>

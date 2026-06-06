@@ -1,0 +1,55 @@
+---
+import type { AnnotatedSegment, LineSegment } from "../content/homepage";
+import RichLine from "./RichLine.astro";
+
+interface Props {
+  line: LineSegment[];
+  className?: string;
+}
+
+const { line, className = "" } = Astro.props;
+
+function isAnnotatedSegment(segment: LineSegment): segment is AnnotatedSegment {
+  return typeof segment === "object" && segment !== null && "type" in segment && segment.type === "annotation";
+}
+
+function isMarginAnnotation(segment: AnnotatedSegment): boolean {
+  return segment.mode === "margin";
+}
+---
+
+<span class:list={["annotated-line", className]}>
+  {line.map((segment) =>
+    isAnnotatedSegment(segment) ? (
+      isMarginAnnotation(segment) ? (
+        <span
+          class:list={[
+            "annotation-segment",
+            "annotation-margin",
+            "annotation-edge",
+            segment.side === "left" ? "annotation-left" : "annotation-right",
+          ]}
+        >
+          <span class="annotation-target">
+            <RichLine tokens={segment.target} />
+          </span>
+          <span class="annotation-arrow" aria-hidden="true"></span>
+          <span class="annotation-bubble">
+            <RichLine tokens={segment.note} />
+          </span>
+        </span>
+      ) : (
+        <details class="annotation-inline">
+          <summary class="annotation-target annotation-target-inline">
+            <RichLine tokens={segment.target} />
+          </summary>
+          <span class="annotation-bubble annotation-bubble-inline">
+            <RichLine tokens={segment.note} />
+          </span>
+        </details>
+      )
+    ) : (
+      <RichLine tokens={segment} />
+    ),
+  )}
+</span>

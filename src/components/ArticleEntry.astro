@@ -1,0 +1,21 @@
+---
+import type { ArticleFeedEntry } from "../content/homepage";
+
+interface Props {
+  entry: ArticleFeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="space-y-4">
+  <h2 class="text-[1.8rem] leading-tight tracking-[0.02em]">{entry.title}</h2>
+  <p class="entry-copy compact m-0">{entry.summary}</p>
+  <a
+    href={entry.ctaHref}
+    class="inline-block text-sm text-[var(--ink)] underline decoration-[var(--red)] decoration-wavy underline-offset-4"
+  >
+    {entry.ctaLabel}
+  </a>
+  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+</article>

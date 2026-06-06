@@ -1,0 +1,21 @@
+---
+import type { FeedEntry } from "../content/homepage";
+import FeedEntryComponent from "./FeedEntry.astro";
+
+interface Props {
+  feed: FeedEntry[];
+}
+
+const { feed } = Astro.props;
+---
+
+<section class="site-frame pb-20 pt-10 sm:pb-28">
+  <div class="space-y-12 sm:space-y-16">
+    {feed.map((entry) => (
+      <Fragment>
+        <FeedEntryComponent entry={entry} />
+        <div class="entry-divider" aria-hidden="true"></div>
+      </Fragment>
+    ))}
+  </div>
+</section>

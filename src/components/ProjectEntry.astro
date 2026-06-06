@@ -1,0 +1,26 @@
+---
+import AnnotatedLine from "./AnnotatedLine.astro";
+import type { ProjectFeedEntry } from "../content/homepage";
+
+interface Props {
+  entry: ProjectFeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="space-y-4">
+  <div class="sketch-card overflow-hidden bg-white p-4 sm:p-5">
+    <div class="tape right-10 top-[-0.3rem] rotate-[6deg]"></div>
+    <img src={entry.image.src} alt={entry.image.alt} class="block w-full" />
+  </div>
+  <h2 class="text-[1.65rem] leading-tight">{entry.title}</h2>
+  <div class="entry-copy compact">
+    {entry.summary.map((line) => (
+      <p class="m-0">
+        <AnnotatedLine line={line} />
+      </p>
+    ))}
+  </div>
+  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+</article>

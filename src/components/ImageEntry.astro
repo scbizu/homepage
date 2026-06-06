@@ -1,0 +1,27 @@
+---
+import AnnotatedLine from "./AnnotatedLine.astro";
+import type { ImageFeedEntry } from "../content/homepage";
+
+interface Props {
+  entry: ImageFeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="space-y-6">
+  <div class="grid gap-6 md:grid-cols-[minmax(0,18rem)_1fr] md:items-start">
+    <figure class="polaroid rotate-[-1.5deg]">
+      <img src={entry.image.src} alt={entry.image.alt} class="block w-full" />
+      <figcaption class="mt-3 text-xs italic text-[var(--ink-soft)]">{entry.image.caption}</figcaption>
+    </figure>
+    <div class="entry-copy compact pt-2">
+      {entry.lines.map((line) => (
+        <p class="m-0">
+          <AnnotatedLine line={line} />
+        </p>
+      ))}
+    </div>
+  </div>
+  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+</article>

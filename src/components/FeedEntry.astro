@@ -1,0 +1,28 @@
+---
+import type { FeedEntry } from "../content/homepage";
+import ArticleEntry from "./ArticleEntry.astro";
+import ImageEntry from "./ImageEntry.astro";
+import ProjectEntry from "./ProjectEntry.astro";
+import QuoteEntry from "./QuoteEntry.astro";
+import TextEntry from "./TextEntry.astro";
+
+interface Props {
+  entry: FeedEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+{
+  entry.type === "text" ? (
+    <TextEntry entry={entry} />
+  ) : entry.type === "image" ? (
+    <ImageEntry entry={entry} />
+  ) : entry.type === "article" ? (
+    <ArticleEntry entry={entry} />
+  ) : entry.type === "quote" ? (
+    <QuoteEntry entry={entry} />
+  ) : (
+    <ProjectEntry entry={entry} />
+  )
+}

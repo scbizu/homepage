@@ -1,0 +1,16 @@
+---
+import type { HeroContent } from "../content/homepage";
+
+interface Props {
+  hero: HeroContent;
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="site-frame pb-4 pt-12 text-center sm:pt-16">
+  <h1 class="hero-title">{hero.title}</h1>
+  <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-soft)] sm:text-base">
+    {hero.subtitle}
+  </p>
+</section>

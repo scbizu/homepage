@@ -1,0 +1,26 @@
+---
+import type { FooterContent } from "../content/homepage";
+
+interface Props {
+  siteTitle: string;
+  footer: FooterContent;
+}
+
+const { siteTitle, footer } = Astro.props;
+---
+
+<footer class="border-t border-[rgba(21,34,75,0.22)] pb-8 pt-6">
+  <div class="site-frame flex flex-col gap-4 text-sm text-[var(--ink-soft)] sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <div class="site-mark text-[2.2rem] leading-none text-[var(--ink)]">{siteTitle}</div>
+    </div>
+    <div class="text-center text-xs italic">{footer.note} {footer.year}</div>
+    <nav class="flex items-center justify-end gap-4">
+      {footer.links.map((link) => (
+        <a class="footer-link" href={link.href} target="_blank" rel="noreferrer">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</footer>

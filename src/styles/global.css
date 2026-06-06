@@ -1,0 +1,396 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper-bg: #f7f1e8;
+  --paper-line: rgba(23, 39, 84, 0.08);
+  --ink: #15224b;
+  --ink-soft: #4e5979;
+  --red: #b24b4c;
+  --yellow: #ffd95c;
+  --card: rgba(255, 255, 255, 0.92);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  background-color: var(--paper-bg);
+  background-image: linear-gradient(to bottom, transparent 23px, var(--paper-line) 24px);
+  background-size: 100% 24px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  left: clamp(1.25rem, 5vw, 2.75rem);
+  top: 6rem;
+  bottom: 6rem;
+  width: 2px;
+  background: rgba(178, 75, 76, 0.22);
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.notebook-shell {
+  position: relative;
+  overflow-x: clip;
+}
+
+.site-frame {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 2rem;
+}
+
+.site-mark {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.hero-title {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: clamp(2.75rem, 7vw, 4.25rem);
+  line-height: 1.1;
+}
+
+.sketch-card {
+  position: relative;
+  border: 2px solid var(--ink);
+  border-radius: 255px 18px 225px 22px / 20px 225px 18px 255px;
+  background: var(--card);
+  box-shadow: 2px 2px 0 rgba(15, 23, 42, 0.12);
+}
+
+.sketch-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(21, 34, 75, 0.15);
+  border-radius: 245px 14px 210px 18px / 18px 214px 16px 240px;
+  pointer-events: none;
+}
+
+.tape {
+  position: absolute;
+  width: 3rem;
+  height: 1.4rem;
+  background: rgba(170, 186, 233, 0.55);
+  transform: rotate(-12deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.polaroid {
+  background: white;
+  padding: 0.85rem 0.85rem 1.4rem;
+  box-shadow: 2px 2px 0 rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(21, 34, 75, 0.1);
+}
+
+.entry-divider {
+  width: 100%;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='14' viewBox='0 0 200 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 7C12 7 12 2 24 2C36 2 36 12 48 12C60 12 60 4 72 4C84 4 84 12 96 12C108 12 108 2 120 2C132 2 132 10 144 10C156 10 156 3 168 3C180 3 180 10 192 10C196 10 198 9 200 8' stroke='%2315224B' stroke-opacity='0.32' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+}
+
+.entry-meta {
+  font-family: "Short Stack", "Karla", "Noto Sans SC", sans-serif;
+  color: rgba(78, 89, 121, 0.82);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.entry-copy {
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+.entry-copy.compact {
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  line-height: 1.9;
+}
+
+.marker {
+  display: inline;
+  padding: 0 0.15rem;
+}
+
+.marker-circle {
+  position: relative;
+}
+
+.marker-circle::after {
+  content: "";
+  position: absolute;
+  left: -0.25rem;
+  right: -0.25rem;
+  top: -0.2rem;
+  bottom: -0.2rem;
+  border: 2px solid rgba(178, 75, 76, 0.85);
+  border-radius: 52% 48% 58% 42% / 42% 56% 44% 58%;
+}
+
+.marker-highlight {
+  background-image: linear-gradient(transparent 48%, rgba(255, 217, 92, 0.72) 48%);
+}
+
+.annotated-line {
+  display: inline;
+}
+
+.annotation-segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: baseline;
+}
+
+.annotation-edge {
+  isolation: isolate;
+}
+
+.annotation-inline {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.annotation-target {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.2rem;
+}
+
+.annotation-target::after {
+  content: "";
+  position: absolute;
+  left: -0.35rem;
+  right: -0.35rem;
+  top: -0.35rem;
+  bottom: -0.3rem;
+  border: 2px solid rgba(178, 75, 76, 0.9);
+  border-radius: 56% 44% 52% 48% / 46% 58% 42% 54%;
+  pointer-events: none;
+}
+
+.annotation-target-inline {
+  cursor: help;
+  list-style: none;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: rgba(21, 34, 75, 0.45);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+}
+
+.annotation-target-inline::-webkit-details-marker {
+  display: none;
+}
+
+.annotation-target-inline::after {
+  display: none;
+}
+
+.annotation-arrow {
+  position: absolute;
+  top: 50%;
+  width: 3.4rem;
+  height: 1.35rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.annotation-arrow::before {
+  content: "";
+  position: absolute;
+  top: 0.62rem;
+  left: 0;
+  right: 0.7rem;
+  border-top: 2px solid rgba(21, 34, 75, 0.65);
+  border-radius: 999px;
+}
+
+.annotation-arrow::after {
+  content: "";
+  position: absolute;
+  top: 0.35rem;
+  right: 0.15rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-top: 2px solid rgba(21, 34, 75, 0.65);
+  border-right: 2px solid rgba(21, 34, 75, 0.65);
+  transform: rotate(45deg);
+}
+
+.annotation-bubble {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: min(14rem, 32vw);
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid rgba(21, 34, 75, 0.8);
+  border-radius: 18px 22px 20px 16px / 16px 24px 18px 22px;
+  box-shadow: 2px 2px 0 rgba(21, 34, 75, 0.08);
+  color: var(--ink-soft);
+  font-family: "LXGW WenKai", "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: normal;
+  transform: translateY(-50%);
+}
+
+.annotation-bubble::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(21, 34, 75, 0.18);
+  border-radius: 16px 18px 16px 14px / 12px 18px 12px 18px;
+  pointer-events: none;
+}
+
+.annotation-bubble-inline {
+  top: calc(100% + 0.75rem);
+  left: 50%;
+  width: min(16rem, 40vw);
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 160ms ease,
+    visibility 160ms ease,
+    transform 160ms ease;
+}
+
+.annotation-inline:hover .annotation-bubble-inline,
+.annotation-inline:focus-within .annotation-bubble-inline,
+.annotation-inline[open] .annotation-bubble-inline {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.annotation-right .annotation-arrow {
+  left: calc(100% + 0.45rem);
+}
+
+.annotation-right .annotation-bubble {
+  left: calc(100% + 6.25rem);
+}
+
+.annotation-left .annotation-arrow {
+  right: calc(100% + 0.45rem);
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.annotation-left .annotation-bubble {
+  right: calc(100% + 6.25rem);
+}
+
+.quote-block {
+  border-left: 3px solid rgba(178, 75, 76, 0.25);
+  padding-left: 1rem;
+  color: var(--red);
+  font-family: "LXGW WenKai", "Ma Shan Zheng", "STKaiti", cursive;
+}
+
+.doodle-button {
+  position: relative;
+  border: 2px solid var(--ink);
+  border-radius: 18px 14px 20px 16px / 16px 20px 12px 18px;
+  background:
+    linear-gradient(transparent 0 55%, rgba(255, 217, 92, 0.65) 55% 100%),
+    rgba(255, 255, 255, 0.85);
+  box-shadow: 2px 2px 0 rgba(21, 34, 75, 0.1);
+  font-family: "Short Stack", "Noto Sans SC", cursive;
+  color: var(--ink);
+}
+
+.doodle-button::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(21, 34, 75, 0.25);
+  border-radius: 14px 12px 16px 10px / 10px 18px 12px 16px;
+  pointer-events: none;
+}
+
+.doodle-button:hover {
+  transform: translateY(-1px) rotate(-0.5deg);
+}
+
+.footer-link {
+  position: relative;
+}
+
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 180ms ease;
+}
+
+.footer-link:hover::after,
+.footer-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 640px) {
+  body::before {
+    left: 1rem;
+    top: 4.5rem;
+    bottom: 4.5rem;
+  }
+
+  .site-frame {
+    padding-inline: 1.1rem;
+  }
+
+  .annotation-segment {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .annotation-inline {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .annotation-arrow {
+    display: none;
+  }
+
+  .annotation-bubble,
+  .annotation-bubble-inline {
+    position: static;
+    width: 100%;
+    margin-top: 0.55rem;
+    transform: none;
+    font-size: 0.88rem;
+    opacity: 1;
+    visibility: visible;
+    transition: none;
+  }
+}

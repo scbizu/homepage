@@ -1,0 +1,28 @@
+---
+import type { InlineToken } from "../content/homepage";
+import { parseInlineMarkup } from "../utils/inlineMarkup";
+
+interface Props {
+  tokens: InlineToken[] | string;
+}
+
+const { tokens } = Astro.props;
+const normalizedTokens = typeof tokens === "string" ? parseInlineMarkup(tokens) : [tokens].flat();
+---
+
+{
+  normalizedTokens.map((token) => {
+    const mark = token.mark ?? "plain";
+    const classes = ["marker"];
+
+    if (mark === "circle") {
+      classes.push("marker-circle");
+    }
+
+    if (mark === "highlight") {
+      classes.push("marker-highlight");
+    }
+
+    return <span class={classes.join(" ")}>{token.text}</span>;
+  })
+}

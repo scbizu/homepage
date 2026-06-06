@@ -1,0 +1,40 @@
+---
+import AnnotatedLine from "./AnnotatedLine.astro";
+import RichLine from "./RichLine.astro";
+import type { ProfileCard } from "../content/homepage";
+
+interface Props {
+  profile: ProfileCard;
+}
+
+const { profile } = Astro.props;
+---
+
+<section class="site-frame pt-2 sm:pt-4">
+  <div class="mx-auto max-w-md">
+    <div class="sketch-card rotate-[1deg] px-5 py-5 sm:px-6">
+      <div class="tape left-5 top-[-0.55rem]"></div>
+      <div class="flex items-start gap-4">
+        <img
+          src={profile.avatar.src}
+          alt={profile.avatar.alt}
+          class="h-14 w-14 shrink-0 rounded-md border border-[rgba(21,34,75,0.2)] object-cover"
+        />
+        <div class="min-w-0">
+          <h2 class="mb-1 text-xl font-semibold tracking-[0.02em] text-[var(--ink)]">
+            {profile.name}
+          </h2>
+          <p class="mb-2 text-sm leading-6 text-[var(--ink-soft)]">
+            <RichLine tokens={profile.role} />
+          </p>
+          <p class="text-sm leading-6 text-[var(--ink-soft)]">
+            <AnnotatedLine line={profile.note} />
+          </p>
+        </div>
+      </div>
+      <p class="mt-4 text-sm leading-7 text-[var(--ink-soft)] sm:text-[0.95rem]">
+        <AnnotatedLine line={profile.intro} />
+      </p>
+    </div>
+  </div>
+</section>
