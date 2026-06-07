@@ -1,0 +1,20 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "telegram-webhook",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-03-10",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true,
+	"vars": {
+		"TELEGRAM_WEBHOOK_PATH": "/webhooks/telegram",
+		"GITHUB_GIST_ID": "35f145e6898bd0c46977fe222a512ae1",
+		"GITHUB_GIST_FILENAME": "telegram_message.jsonl"
+	}
+}

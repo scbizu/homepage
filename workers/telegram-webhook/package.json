@@ -1,0 +1,20 @@
+{
+	"name": "telegram-webhook",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"check": "tsc --noEmit",
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.12.4",
+		"@types/node": "^25.9.2",
+		"typescript": "^5.5.2",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.98.0"
+	}
+}

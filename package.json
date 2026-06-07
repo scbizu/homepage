@@ -10,7 +10,11 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "deploy": "bun run build && bunx wrangler deploy"
+    "deploy": "bun run build && bunx wrangler deploy",
+    "worker:telegram:dev": "cd workers/telegram-webhook && bun run dev",
+    "worker:telegram:test": "cd workers/telegram-webhook && bun run test",
+    "worker:telegram:check": "cd workers/telegram-webhook && bun run check",
+    "worker:telegram:deploy": "cd workers/telegram-webhook && bun run deploy"
   },
   "dependencies": {
     "astro": "^5.18.2"

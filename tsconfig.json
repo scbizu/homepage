@@ -9,6 +9,7 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "workers"
   ]
 }
