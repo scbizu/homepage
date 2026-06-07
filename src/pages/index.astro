@@ -5,15 +5,16 @@ import NotebookFeed from "../components/NotebookFeed.astro";
 import ProfileCard from "../components/ProfileCard.astro";
 import SiteMark from "../components/SiteMark.astro";
 import { homepage } from "../content/homepage";
+import generatedTelegramFeed from "../content/generated/channels/telegram-feed.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title={`${homepage.siteTitle} | 流动的碎碎念`} description={homepage.hero.subtitle}>
+<BaseLayout title={`${homepage.siteTitle} | Nace`} description={homepage.hero.subtitle}>
   <SiteMark title={homepage.siteTitle} />
   <main>
     <ProfileCard profile={homepage.profile} />
     <HeroSection hero={homepage.hero} />
-    <NotebookFeed feed={homepage.feed} />
+    <NotebookFeed feed={[...generatedTelegramFeed.entries, ...homepage.feed]} />
   </main>
   <FooterNote siteTitle={homepage.siteTitle} footer={homepage.footer} />
 </BaseLayout>

@@ -19,7 +19,7 @@ export interface AnnotatedSegment {
 export type LineSegment = string | InlineToken[] | AnnotatedSegment;
 
 export interface EntryMeta {
-  prefix: string;
+  prefix?: string;
   source: string;
   date: string;
 }

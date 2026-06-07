@@ -23,5 +23,5 @@ const { entry } = Astro.props;
       ))}
     </div>
   </div>
-  <p class="entry-meta">{entry.meta.prefix} / {entry.meta.source} {entry.meta.date}</p>
+  <p class="entry-meta">{entry.meta.prefix ? `${entry.meta.prefix} / ` : ""}{entry.meta.source} {entry.meta.date}</p>
 </article>

@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "scnace-me",
+  "compatibility_date": "2026-06-07",
+  "main": "./src/worker.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "routes": [
+    {
+      "pattern": "scnace.me",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.scnace.me",
+      "custom_domain": true
+    }
+  ]
+}
