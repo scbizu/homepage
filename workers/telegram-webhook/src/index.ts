@@ -60,6 +60,9 @@ type EnvLike = Env & {
 	GITHUB_GIST_ID?: string;
 	GITHUB_GIST_TOKEN?: string;
 	GITHUB_GIST_FILENAME?: string;
+	GITHUB_REPO_OWNER?: string;
+	GITHUB_REPO_NAME?: string;
+	GITHUB_REPO_DISPATCH_TOKEN?: string;
 };
 
 const defaultWebhookPath = "/webhooks/telegram";
@@ -105,7 +108,16 @@ export default {
 
 		const acceptedUpdate = normalizeAcceptedUpdate(update);
 		if (!acceptedUpdate) {
-			return json({ ok: false, error: "unsupported_update" }, 400);
+			return json(
+				{
+					ok: true,
+					accepted: false,
+					ignored: true,
+					reason: "unsupported_update",
+					updateId: update.update_id,
+				},
+				202,
+			);
 		}
 
 		let persistResult: PersistResult = {
@@ -117,15 +129,25 @@ export default {
 			persistResult = await persistAcceptedUpdate(update, acceptedUpdate, env);
 		} catch (error) {
 			console.error("Failed to persist Telegram update", error);
-			return json({ ok: false, error: "gist_persist_failed" }, 502);
+			return json(
+				{
+					ok: false,
+					error: "gist_persist_failed",
+					detail: error instanceof Error ? error.message : "unknown_error",
+				},
+				502,
+			);
 		}
 
 		ctx.waitUntil(
-			logAcceptedUpdate({
-				updateId: update.update_id,
-				eventType: acceptedUpdate.eventType,
-				messageId: acceptedUpdate.message.message_id,
-			}),
+			Promise.all([
+				logAcceptedUpdate({
+					updateId: update.update_id,
+					eventType: acceptedUpdate.eventType,
+					messageId: acceptedUpdate.message.message_id,
+				}),
+				triggerRepositoryDispatch(update, acceptedUpdate, persistResult, env),
+			]),
 		);
 
 		return json(
@@ -208,7 +230,8 @@ async function fetchGist(gistId: string, token: string): Promise<GistResponse> {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to fetch gist ${gistId}: ${response.status}`);
+		const detail = await responseDetail(response);
+		throw new Error(`Failed to fetch gist ${gistId}: ${response.status} ${detail}`.trim());
 	}
 
 	return (await response.json()) as GistResponse;
@@ -228,7 +251,8 @@ async function updateGistFile(gistId: string, token: string, filename: string, c
 	});
 
 	if (!response.ok) {
-		throw new Error(`Failed to update gist ${gistId}: ${response.status}`);
+		const detail = await responseDetail(response);
+		throw new Error(`Failed to update gist ${gistId}: ${response.status} ${detail}`.trim());
 	}
 }
 
@@ -237,6 +261,7 @@ function githubHeaders(token: string): HeadersInit {
 		accept: "application/vnd.github+json",
 		authorization: `Bearer ${token}`,
 		"content-type": "application/json; charset=utf-8",
+		"user-agent": "telegram-webhook-worker",
 		"x-github-api-version": "2022-11-28",
 	};
 }
@@ -298,6 +323,44 @@ async function logAcceptedUpdate(payload: {
 	console.log("Accepted Telegram update", payload);
 }
 
+async function triggerRepositoryDispatch(
+	update: TelegramWebhookUpdate,
+	acceptedUpdate: NonNullable<ReturnType<typeof normalizeAcceptedUpdate>>,
+	persistResult: PersistResult,
+	env: EnvLike,
+) {
+	if (!persistResult.stored || persistResult.duplicate) {
+		return;
+	}
+
+	if (!env.GITHUB_REPO_OWNER || !env.GITHUB_REPO_NAME || !env.GITHUB_REPO_DISPATCH_TOKEN) {
+		return;
+	}
+
+	const response = await fetch(
+		`${githubApiBase}/repos/${env.GITHUB_REPO_OWNER}/${env.GITHUB_REPO_NAME}/dispatches`,
+		{
+			method: "POST",
+			headers: githubHeaders(env.GITHUB_REPO_DISPATCH_TOKEN),
+			body: JSON.stringify({
+				event_type: "telegram-sync",
+				client_payload: {
+					platform: "telegram",
+					update_id: update.update_id,
+					message_id: acceptedUpdate.message.message_id,
+				},
+			}),
+		},
+	);
+
+	if (!response.ok) {
+		const detail = await responseDetail(response);
+		throw new Error(
+			`Failed to dispatch GitHub workflow ${env.GITHUB_REPO_OWNER}/${env.GITHUB_REPO_NAME}: ${response.status} ${detail}`.trim(),
+		);
+	}
+}
+
 function json(body: unknown, status = 200, headers?: HeadersInit): Response {
 	return new Response(JSON.stringify(body), {
 		status,
@@ -306,4 +369,16 @@ function json(body: unknown, status = 200, headers?: HeadersInit): Response {
 			...headers,
 		},
 	});
+}
+
+async function responseDetail(response: Response): Promise<string> {
+	try {
+		const data = (await response.json()) as { message?: unknown };
+		if (typeof data.message === "string" && data.message.length > 0) {
+			return data.message;
+		}
+	} catch {
+	}
+
+	return "";
 }

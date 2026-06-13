@@ -11,7 +11,8 @@ describe("generated channel feed integration", () => {
   test("merges generated channel entries into the homepage notebook feed", () => {
     const source = readFileSync(pagePath, "utf8");
     expect(source).toContain("telegram-feed.json");
-    expect(source).toContain("[...generatedTelegramFeed.entries, ...homepage.feed]");
+    expect(source).toContain("const mergedFeed: FeedEntry[] = [...generatedEntries, ...homepage.feed];");
+    expect(source).toContain("<NotebookFeed feed={mergedFeed} />");
   });
 
   test("renders text entry meta without forcing a prefix", () => {

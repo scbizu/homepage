@@ -6,6 +6,7 @@ const root = process.cwd();
 const packageJsonPath = resolve(root, "package.json");
 const wranglerConfigPath = resolve(root, "wrangler.jsonc");
 const workerPath = resolve(root, "src/worker.ts");
+const workflowPath = resolve(root, ".github/workflows/telegram-sync-deploy.yml");
 
 describe("cloudflare workers deployment files", () => {
   test("includes the Wrangler config needed for Workers deploys", () => {
@@ -44,5 +45,16 @@ describe("cloudflare workers deployment files", () => {
     expect(worker).toContain("url.hostname === \"www.scnace.me\"");
     expect(worker).toContain("Response.redirect");
     expect(worker).toContain("env.ASSETS.fetch(request)");
+  });
+
+  test("includes a GitHub Actions workflow for telegram-triggered sync and deploy", () => {
+    expect(existsSync(workflowPath)).toBe(true);
+
+    const workflow = readFileSync(workflowPath, "utf8");
+    expect(workflow).toContain("repository_dispatch");
+    expect(workflow).toContain("telegram-sync");
+    expect(workflow).toContain("bun run sync:telegram");
+    expect(workflow).toContain("bun run build");
+    expect(workflow).toContain("bunx wrangler deploy");
   });
 });

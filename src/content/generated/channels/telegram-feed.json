@@ -1,4 +1,18 @@
 {
-  "entries": [],
+  "entries": [
+    {
+      "type": "text",
+      "id": "telegram-119",
+      "lines": [
+        [
+          "Test"
+        ]
+      ],
+      "meta": {
+        "source": "发表于 Telegram",
+        "date": "2026年6月13日"
+      }
+    }
+  ],
   "skipped": []
 }
