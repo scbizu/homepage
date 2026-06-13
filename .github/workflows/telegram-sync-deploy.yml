@@ -1,6 +1,9 @@
 name: Telegram Sync Deploy
 
 on:
+  push:
+    branches:
+      - main
   repository_dispatch:
     types:
       - telegram-sync
