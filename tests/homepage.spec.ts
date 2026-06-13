@@ -9,16 +9,14 @@ const pagePath = resolve(root, "src/pages/index.astro");
 const profileCardPath = resolve(root, "src/components/ProfileCard.astro");
 
 describe("homepage content model", () => {
-  test("defines typed homepage content with multiple notebook entry kinds", async () => {
+  test("defines typed homepage content and leaves feed items to generated channel data", async () => {
     expect(existsSync(contentPath)).toBe(true);
 
     const module = await import(contentPath);
     expect(module.homepage.siteTitle).toBeTruthy();
     expect(module.homepage.hero.title).toBeTruthy();
-    expect(module.homepage.feed.length).toBeGreaterThanOrEqual(5);
-
-    const kinds = new Set(module.homepage.feed.map((entry: { type: string }) => entry.type));
-    expect(kinds).toEqual(new Set(["text", "image", "article", "quote", "project"]));
+    expect(Array.isArray(module.homepage.feed)).toBe(true);
+    expect(module.homepage.feed).toHaveLength(0);
   });
 });
 

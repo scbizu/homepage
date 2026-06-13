@@ -11,7 +11,7 @@ const projectEntryPath = resolve(root, "src/components/ProjectEntry.astro");
 const profileCardPath = resolve(root, "src/components/ProfileCard.astro");
 
 describe("annotation content model", () => {
-  test("supports structured annotation segments in content without using margin mode in current content", async () => {
+  test("supports structured annotation segments in static content without using margin mode in current content", async () => {
     const mod = await import(contentPath);
     expect(mod.homepage.profile.intro).toBeInstanceOf(Array);
     expect(mod.homepage.profile.note).toBeInstanceOf(Array);
@@ -25,24 +25,7 @@ describe("annotation content model", () => {
           (!("mode" in segment) || segment.mode === "inline"),
       ),
     ).toBe(true);
-    expect(
-      mod.homepage.feed.some((entry: { type: string; lines?: unknown[] }) =>
-        entry.type === "text" &&
-        Array.isArray(entry.lines) &&
-        entry.lines.some(
-          (line) =>
-            Array.isArray(line) &&
-            line.some(
-              (segment) =>
-                segment &&
-                typeof segment === "object" &&
-                "type" in segment &&
-                segment.type === "annotation" &&
-                (!("mode" in segment) || segment.mode === "inline"),
-            ),
-        ),
-      ),
-    ).toBe(true);
+    expect(Array.isArray(mod.homepage.feed)).toBe(true);
     expect(JSON.stringify(mod.homepage)).not.toContain('"mode":"margin"');
   });
 });
