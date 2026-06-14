@@ -1,4 +1,4 @@
-name: Telegram Sync Deploy
+name: Channel Sync Deploy
 
 on:
   push:
@@ -7,7 +7,12 @@ on:
   repository_dispatch:
     types:
       - telegram-sync
+      - discord-sync
   workflow_dispatch:
+
+concurrency:
+  group: channel-sync-deploy
+  cancel-in-progress: true
 
 jobs:
   sync-and-deploy:
@@ -27,8 +32,10 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Sync Telegram feed
-        run: bun run sync:telegram
+      - name: Sync channel feeds
+        env:
+          DISCORD_GIST_RAW_URL: ${{ secrets.DISCORD_GIST_RAW_URL }}
+        run: bun run sync:channels
 
       - name: Build homepage
         run: bun run build

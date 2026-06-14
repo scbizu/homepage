@@ -1,0 +1,34 @@
+{
+  "entries": [
+    {
+      "type": "text",
+      "id": "telegram-555008",
+      "lines": [["自动部署链路二次测试"]],
+      "meta": {
+        "prefix": "photo",
+        "source": "发表于 Telegram",
+        "date": "2026年6月13日"
+      }
+    },
+    {
+      "type": "text",
+      "id": "telegram-555007",
+      "lines": [["自动部署链路测试"]],
+      "meta": {
+        "prefix": "photo",
+        "source": "发表于 Telegram",
+        "date": "2026年6月13日"
+      }
+    },
+    {
+      "type": "text",
+      "id": "telegram-119",
+      "lines": [["Test"]],
+      "meta": {
+        "source": "发表于 Telegram",
+        "date": "2026年6月13日"
+      }
+    }
+  ],
+  "skipped": []
+}

@@ -11,11 +11,17 @@
     "check": "astro check",
     "test": "vitest run tests",
     "sync:telegram": "bun scripts/sync-telegram.ts",
+    "sync:channels": "bun scripts/sync-channels.ts",
+    "discord:register-command": "bun scripts/register-discord-command.ts",
     "deploy": "bun run build && bunx wrangler deploy",
     "worker:telegram:dev": "cd workers/telegram-webhook && bun run dev",
     "worker:telegram:test": "cd workers/telegram-webhook && bun run test",
     "worker:telegram:check": "cd workers/telegram-webhook && bun run check",
-    "worker:telegram:deploy": "cd workers/telegram-webhook && bun run deploy"
+    "worker:telegram:deploy": "cd workers/telegram-webhook && bun run deploy",
+    "worker:discord:dev": "cd workers/discord-interactions && bun run dev",
+    "worker:discord:test": "cd workers/discord-interactions && bun run test",
+    "worker:discord:check": "cd workers/discord-interactions && bun run check",
+    "worker:discord:deploy": "cd workers/discord-interactions && bun run deploy"
   },
   "dependencies": {
     "astro": "^5.18.2"

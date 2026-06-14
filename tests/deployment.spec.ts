@@ -47,13 +47,15 @@ describe("cloudflare workers deployment files", () => {
     expect(worker).toContain("env.ASSETS.fetch(request)");
   });
 
-  test("includes a GitHub Actions workflow for telegram-triggered sync and deploy", () => {
+  test("includes a GitHub Actions workflow for channel-triggered sync and deploy", () => {
     expect(existsSync(workflowPath)).toBe(true);
 
     const workflow = readFileSync(workflowPath, "utf8");
     expect(workflow).toContain("repository_dispatch");
     expect(workflow).toContain("telegram-sync");
-    expect(workflow).toContain("bun run sync:telegram");
+    expect(workflow).toContain("discord-sync");
+    expect(workflow).toContain("concurrency:");
+    expect(workflow).toContain("bun run sync:channels");
     expect(workflow).toContain("bun run build");
     expect(workflow).toContain("bunx wrangler deploy");
   });

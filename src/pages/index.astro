@@ -5,10 +5,10 @@ import NotebookFeed from "../components/NotebookFeed.astro";
 import ProfileCard from "../components/ProfileCard.astro";
 import SiteMark from "../components/SiteMark.astro";
 import { homepage, type FeedEntry } from "../content/homepage";
-import generatedTelegramFeed from "../content/generated/channels/telegram-feed.json";
+import generatedChannelsFeed from "../content/generated/channels/channels-feed.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const generatedEntries = generatedTelegramFeed.entries as FeedEntry[];
+const generatedEntries = generatedChannelsFeed.entries as FeedEntry[];
 const mergedFeed: FeedEntry[] = [...generatedEntries, ...homepage.feed];
 ---
 
