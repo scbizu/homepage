@@ -11,6 +11,7 @@
   "upload_source_maps": true,
   "vars": {
     "DISCORD_INTERACTIONS_PATH": "/interactions/discord",
+    "DISCORD_ALLOWED_GUILD_ID": "733013633336082543",
     "GITHUB_GIST_FILENAME": "discord_message.jsonl",
     "GITHUB_REPO_OWNER": "scbizu",
     "GITHUB_REPO_NAME": "homepage",
