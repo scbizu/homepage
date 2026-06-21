@@ -4,6 +4,7 @@ interface TelegramPhotoSize {
 	width: number;
 	height: number;
 	file_size?: number;
+	public_url?: string;
 }
 
 interface TelegramChat {
@@ -57,11 +58,14 @@ interface PersistedTelegramEvent {
 type EnvLike = Env & {
 	TELEGRAM_WEBHOOK_SECRET?: string;
 	TELEGRAM_WEBHOOK_PATH?: string;
+	TELEGRAM_BOT_TOKEN?: string;
+	GITHUB_CONTENT_TOKEN?: string;
 	GITHUB_GIST_ID?: string;
 	GITHUB_GIST_TOKEN?: string;
 	GITHUB_GIST_FILENAME?: string;
 	GITHUB_REPO_OWNER?: string;
 	GITHUB_REPO_NAME?: string;
+	GITHUB_REPO_BRANCH?: string;
 	GITHUB_REPO_DISPATCH_TOKEN?: string;
 };
 
@@ -213,7 +217,8 @@ async function persistAcceptedUpdate(
 		};
 	}
 
-	const nextLine = JSON.stringify(toPersistedTelegramEvent(update, acceptedUpdate));
+	const persistedMessage = await persistPhoto(acceptedUpdate.message, env);
+	const nextLine = JSON.stringify(toPersistedTelegramEvent(update, acceptedUpdate, persistedMessage));
 	const nextContent = currentContent ? `${currentContent}\n${nextLine}` : nextLine;
 	await updateGistFile(env.GITHUB_GIST_ID, env.GITHUB_GIST_TOKEN, gistFilename, nextContent);
 
@@ -297,8 +302,9 @@ function hasUpdateId(content: string, updateId: number): boolean {
 function toPersistedTelegramEvent(
 	update: TelegramWebhookUpdate,
 	acceptedUpdate: NonNullable<ReturnType<typeof normalizeAcceptedUpdate>>,
+	message: TelegramChannelMessage = acceptedUpdate.message,
 ): PersistedTelegramEvent {
-	const chat = acceptedUpdate.message.chat;
+	const chat = message.chat;
 
 	return {
 		schema_version: 1,
@@ -311,8 +317,107 @@ function toPersistedTelegramEvent(
 			username: chat?.username,
 			type: "channel",
 		},
-		message: acceptedUpdate.message,
+		message,
 	};
+}
+
+async function persistPhoto(message: TelegramChannelMessage, env: EnvLike): Promise<TelegramChannelMessage> {
+	if (!message.photo || message.photo.length === 0) {
+		return message;
+	}
+
+	if (
+		!env.TELEGRAM_BOT_TOKEN ||
+		!env.GITHUB_CONTENT_TOKEN ||
+		!env.GITHUB_REPO_OWNER ||
+		!env.GITHUB_REPO_NAME
+	) {
+		throw new Error("Telegram photo persistence is not configured");
+	}
+
+	const largest = [...message.photo].sort(
+		(left, right) => right.width * right.height - left.width * left.height,
+	)[0];
+	const filePath = await getTelegramFilePath(largest.file_id, env.TELEGRAM_BOT_TOKEN);
+	const imageResponse = await fetch(
+		`https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${filePath}`,
+	);
+	if (!imageResponse.ok) {
+		throw new Error(`Failed to download Telegram photo: ${imageResponse.status}`);
+	}
+
+	const extension = safeExtension(filePath);
+	const repositoryPath =
+		`public/images/channels/telegram/${message.message_id}-${largest.file_unique_id}.${extension}`;
+	await putRepositoryFile(repositoryPath, await imageResponse.arrayBuffer(), env);
+	const publicUrl = `/${repositoryPath.replace(/^public\//, "")}`;
+
+	return {
+		...message,
+		photo: message.photo.map((photo) =>
+			photo.file_id === largest.file_id ? { ...photo, public_url: publicUrl } : photo,
+		),
+	};
+}
+
+async function getTelegramFilePath(fileId: string, botToken: string): Promise<string> {
+	const response = await fetch(
+		`https://api.telegram.org/bot${botToken}/getFile?file_id=${encodeURIComponent(fileId)}`,
+	);
+	if (!response.ok) {
+		throw new Error(`Telegram getFile failed: ${response.status}`);
+	}
+
+	const data = (await response.json()) as { ok?: boolean; result?: { file_path?: string } };
+	if (!data.ok || !data.result?.file_path) {
+		throw new Error("Telegram getFile returned no file path");
+	}
+	return data.result.file_path;
+}
+
+async function putRepositoryFile(path: string, bytes: ArrayBuffer, env: EnvLike) {
+	const branch = env.GITHUB_REPO_BRANCH || "main";
+	const apiUrl = `${githubApiBase}/repos/${env.GITHUB_REPO_OWNER}/${env.GITHUB_REPO_NAME}/contents/${path}`;
+	const headers = githubHeaders(env.GITHUB_CONTENT_TOKEN!);
+	const encoded = toBase64(bytes);
+	const existing = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, { headers });
+
+	if (existing.ok) {
+		const data = (await existing.json()) as { content?: string };
+		if ((data.content ?? "").replace(/\s/g, "") === encoded) {
+			return;
+		}
+		throw new Error(`Telegram image already exists with different content: ${path}`);
+	}
+	if (existing.status !== 404) {
+		throw new Error(`Failed to inspect Telegram image: ${existing.status}`);
+	}
+
+	const response = await fetch(apiUrl, {
+		method: "PUT",
+		headers,
+		body: JSON.stringify({
+			message: `data: add Telegram image ${path.split("/").at(-1)}`,
+			content: encoded,
+			branch,
+		}),
+	});
+	if (!response.ok) {
+		throw new Error(`Failed to upload Telegram image: ${response.status}`);
+	}
+}
+
+function safeExtension(filePath: string): string {
+	const extension = filePath.split(".").at(-1)?.toLowerCase();
+	return extension && /^[a-z0-9]{1,8}$/.test(extension) ? extension : "jpg";
+}
+
+function toBase64(bytes: ArrayBuffer): string {
+	let binary = "";
+	for (const byte of new Uint8Array(bytes)) {
+		binary += String.fromCharCode(byte);
+	}
+	return btoa(binary);
 }
 
 async function logAcceptedUpdate(payload: {

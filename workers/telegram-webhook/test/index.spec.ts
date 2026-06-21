@@ -250,6 +250,75 @@ describe("telegram webhook worker", () => {
 		expect(patchBody.files["telegram_message.jsonl"]?.content).toContain('"update_id":11');
 	});
 
+	it("downloads the largest Telegram photo and persists its public repository url", async () => {
+		const fetchMock = vi
+			.spyOn(globalThis, "fetch")
+			.mockResolvedValueOnce(
+				new Response(JSON.stringify({ files: { "telegram_message.jsonl": { content: "" } } }), {
+					status: 200,
+					headers: { "content-type": "application/json" },
+				}),
+			)
+			.mockResolvedValueOnce(
+				new Response(JSON.stringify({ ok: true, result: { file_path: "photos/photo.jpg" } }), {
+					status: 200,
+					headers: { "content-type": "application/json" },
+				}),
+			)
+			.mockResolvedValueOnce(new Response(new Uint8Array([1, 2, 3]), { status: 200 }))
+			.mockResolvedValueOnce(new Response(JSON.stringify({ message: "Not Found" }), { status: 404 }))
+			.mockResolvedValueOnce(new Response(JSON.stringify({ content: { sha: "image-sha" } }), { status: 201 }))
+			.mockResolvedValueOnce(new Response(null, { status: 200 }));
+
+		const request = new Request("http://example.com/webhooks/telegram", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				update_id: 21,
+				channel_post: {
+					message_id: 301,
+					date: 1780833600,
+					caption: "photo post",
+					photo: [
+						{ file_id: "small", file_unique_id: "small-unique", width: 320, height: 200 },
+						{ file_id: "large", file_unique_id: "large-unique", width: 1280, height: 800 },
+					],
+				},
+			}),
+		});
+		const ctx = createExecutionContext();
+		const response = await worker.fetch(
+			request,
+			{
+				...env,
+				TELEGRAM_BOT_TOKEN: "telegram-token",
+				GITHUB_CONTENT_TOKEN: "content-token",
+				GITHUB_GIST_ID: "gist-id",
+				GITHUB_GIST_TOKEN: "gist-token",
+				GITHUB_GIST_FILENAME: "telegram_message.jsonl",
+				GITHUB_REPO_OWNER: "scbizu",
+				GITHUB_REPO_NAME: "homepage",
+				GITHUB_REPO_BRANCH: "main",
+			},
+			ctx,
+		);
+
+		await waitOnExecutionContext(ctx);
+		expect(response.status).toBe(202);
+		expect(fetchMock.mock.calls[1]?.[0]).toBe("https://api.telegram.org/bottelegram-token/getFile?file_id=large");
+		expect(fetchMock.mock.calls[2]?.[0]).toBe("https://api.telegram.org/file/bottelegram-token/photos/photo.jpg");
+		expect(fetchMock.mock.calls[3]?.[0]).toContain(
+			"/contents/public/images/channels/telegram/301-large-unique.jpg?ref=main",
+		);
+
+		const gistPatch = JSON.parse(String((fetchMock.mock.calls[5]?.[1] as RequestInit).body)) as {
+			files: Record<string, { content: string }>;
+		};
+		expect(gistPatch.files["telegram_message.jsonl"].content).toContain(
+			'"public_url":"/images/channels/telegram/301-large-unique.jpg"',
+		);
+	});
+
 	it("does not patch the gist again when the update already exists", async () => {
 		const existingLine = JSON.stringify({
 			schema_version: 1,

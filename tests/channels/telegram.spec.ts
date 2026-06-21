@@ -45,7 +45,14 @@ describe("telegram normalization", () => {
         caption: "#photo\n今天的光很好。",
         photo: [
           { file_id: "small", file_unique_id: "small-1", width: 300, height: 200 },
-          { file_id: "large", file_unique_id: "large-1", width: 1280, height: 720, file_size: 123456 },
+          {
+            file_id: "large",
+            file_unique_id: "large-1",
+            width: 1280,
+            height: 720,
+            file_size: 123456,
+            public_url: "/images/channels/telegram/102-large-1.jpg",
+          },
         ],
       },
     });
@@ -58,6 +65,7 @@ describe("telegram normalization", () => {
         {
           kind: "image",
           sourceId: "large",
+          url: "/images/channels/telegram/102-large-1.jpg",
           width: 1280,
           height: 720,
         },

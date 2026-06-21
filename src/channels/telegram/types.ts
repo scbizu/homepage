@@ -6,6 +6,7 @@ export interface TelegramPhotoSize {
   width: number;
   height: number;
   file_size?: number;
+  public_url?: string;
 }
 
 export interface TelegramEntity {

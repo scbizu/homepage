@@ -4,6 +4,7 @@ import worker from "../src";
 
 let privateKey: CryptoKey;
 let publicKeyHex: string;
+const allowedGuildId = "733013633336082543";
 
 beforeAll(async () => {
   const keys = await crypto.subtle.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
@@ -214,7 +215,7 @@ function messageInteraction(options: {
     id: "interaction-1",
     application_id: "application-1",
     type: 2,
-    guild_id: options.guildId ?? "allowed",
+    guild_id: options.guildId ?? allowedGuildId,
     channel_id: "200",
     member: { permissions: options.permissions ?? "8" },
     data: {

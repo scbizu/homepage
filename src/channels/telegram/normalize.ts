@@ -64,6 +64,7 @@ function normalizeMedia(photoSizes?: TelegramPhotoSize[]): ChannelMedia[] {
     {
       kind: "image",
       sourceId: largest.file_id,
+      url: largest.public_url,
       width: largest.width,
       height: largest.height,
     },

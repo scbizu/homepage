@@ -29,3 +29,12 @@ DISCORD_APPLICATION_ID=... DISCORD_BOT_TOKEN=... bun run discord:register-comman
 
 The GitHub Actions repository also needs `DISCORD_GIST_RAW_URL`, pointing to
 the raw `discord_message.jsonl` Gist file.
+
+Telegram photo posts use the same repository-backed image storage. Configure
+these additional secrets on `workers/telegram-webhook`:
+
+- `TELEGRAM_BOT_TOKEN`
+- `GITHUB_CONTENT_TOKEN`
+
+New Telegram photos are stored under `public/images/channels/telegram` before
+the event is appended to the Telegram JSONL Gist.
